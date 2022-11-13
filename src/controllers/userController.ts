@@ -10,7 +10,7 @@ const {name, email, password} = req.body as User
 try {
 
     await userRepository.insertNewUserData(name, email, password)
-    res.sendStatus(400)
+    res.sendStatus(200)
 
 } catch (error) {
     res.send(error.message)
