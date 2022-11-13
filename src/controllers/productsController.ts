@@ -1,19 +1,12 @@
 import { Request, Response } from "express";
-import { Product } from "../protocols/Products";
+import { Product, ProductTypeName, ProductName } from "../protocols/Products";
 import { productsRepository } from "../repositories/productsRepository.js";
 
 async function insertProduct(req: Request, res: Response) {
-  const { name, description, brandName, expirationDate, typeName, stock } = req.body;
+  const newProduct = req.body as Product;
 
   try {
-    await productsRepository.insertNewProduct(
-      name,
-      description,
-      brandName,
-      expirationDate,
-      typeName,
-      stock
-    );
+    await productsRepository.insertNewProduct(newProduct);
 
     res.sendStatus(200);
   } catch (error) {
@@ -32,7 +25,7 @@ async function getAllProducts(req: Request, res: Response) {
 }
 
 async function getFilteredProduct(req: Request, res: Response) {
-  const { productType } = req.params;
+  const productType = req.params as ProductTypeName;
 
   try {
     const filteredProducts = await productsRepository.getProductsDataByType(productType);
@@ -43,7 +36,7 @@ async function getFilteredProduct(req: Request, res: Response) {
 }
 
 async function removeProductStock(req: Request, res: Response) {
-  const { name } = req.body;
+  const name = req.body as ProductName;
   try {
     await productsRepository.updateStock(name);
     res.sendStatus(200);
@@ -53,7 +46,7 @@ async function removeProductStock(req: Request, res: Response) {
 }
 
 async function deleteProduct(req: Request, res: Response) {
-  const { name } = req.body;
+  const name = req.body as ProductName;
 
   try {
     await productsRepository.deleteProduct(name);
