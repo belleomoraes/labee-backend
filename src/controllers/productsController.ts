@@ -36,9 +36,9 @@ async function getFilteredProduct(req: Request, res: Response): Promise<void> {
 }
 
 async function removeProductStock(req: Request, res: Response): Promise<void> {
-  const name = req.body as ProductName;
+  const {name} = req.body as ProductName;
   try {
-    await productsRepository.updateStock(name);
+    await productsRepository.updateStock({name});
     res.sendStatus(200);
   } catch (error) {
     res.status(500).send(error.message);
@@ -46,10 +46,10 @@ async function removeProductStock(req: Request, res: Response): Promise<void> {
 }
 
 async function deleteProduct(req: Request, res: Response): Promise<void> {
-  const name = req.body as ProductName;
+  const {name} = req.body as ProductName;
 
   try {
-    await productsRepository.deleteProduct(name);
+    await productsRepository.deleteProduct({name});
     res.sendStatus(200);
   } catch (error) {
     res.status(500).send(error.message);
