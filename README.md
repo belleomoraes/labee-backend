@@ -1,8 +1,6 @@
 # labee-backend
 Labee is an API for organizing laboratory material inventory.
 
-Try it out now at https://labee-backend.herokuapp.com/
-
 ## About
 
 Different laboratories have some difficulty to organize their inventory. Labee intend to facilitate this proccess. 
@@ -45,8 +43,10 @@ Node.js, Express, TypeScript, PostgresSQL, Joi, Cors
 
 ## How to run
 1. Clone this repository
-2. Install dependencies: npm i
-3. Run with: npm start
-4. Access in ThunderCLient: https://labee-backend.herokuapp.com/
+2. Create database with dump.sql
+3. Configure .env accordling to .env-example
+4. Install dependencies: npm i
+5. Run with: npm start
+6. Access in ThunderCLient: http://localhost:4000 
 
 
