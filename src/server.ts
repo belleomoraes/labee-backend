@@ -1,7 +1,6 @@
 import express from "express";
 import "dotenv/config";
 import cors from "cors";
-import userRouter from "./routers/userRouter.js";
 import productRouter from "./routers/productsRouter.js";
 
 const server = express();
@@ -14,7 +13,6 @@ const options: cors.CorsOptions = {
 
 server.use(cors(options));
 server.use(express.json());
-server.use(userRouter);
 server.use(productRouter);
 
 
