@@ -1,62 +1,16 @@
-import {Request, Response} from 'express'
-import { Product } from '../protocols/Products'
+import { Request, Response } from "express";
+import { Product } from "../protocols/Products";
+import { productsRepository } from "../repositories/productsRepository.js";
 
-const products = [{
-    name: "Centrífuga de placa",
-    type: "Equipamento",
-    price: "4000"
-}, {
-    name: "Centrífuga de tubo",
-    type: "Equipamento",
-    price: "4000"
-}, {
-    name: "Centrífuga refrigerada",
-    type: "Equipamento",
-    price: "4000"
-}, {
-    name: "Enzima PCR",
-    type: "Reagente",
-    price: "200"
-}, {
-    name: "Tampão PCR",
-    type: "Reagente",
-    price: "200"
-}, {
-    name: "dNTP",
-    type: "Reagente",
-    price: "300"
-}, {
-    name: "Tubo falcon",
-    type: "Plástico",
-    price: "40"
-},
-{
-    name: "Pipeta pasteur",
-    type: "Plástico",
-    price: "30"
-}, {
-    name: "Eppendorf",
-    type: "Plástico",
-    price: "30"
-}, {
-    name: "Erlenmayer",
-    type: "Vidraria",
-    price: "200"
-}, {
-    name: "Proveta",
-    type: "Vidraria",
-    price: "100"
-}, , {
-    name: "Becker",
-    type: "Vidraria",
-    price: "300"
-}]
+async function getAllProducts(req: Request, res: Response) {
+  try {
+    const allProducts = await productsRepository.getProductsData();
 
-
-// function insertProduct (req: Request, res: Response) {
-// const {name, email, password} = req.body as User
-
-// }
+    res.status(200).send(allProducts.rows);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+}
 
 // function deleteProduct (req: Request, res: Response) {
 //     const {email, password} = req.body as User
@@ -66,15 +20,23 @@ const products = [{
 //     const {email, password} = req.body as User
 // }
 
-function getFilteredProduct (req: Request, res: Response) {
-    const {type, name} = req.query as Product
-}
+async function getFilteredProduct(req: Request, res: Response) {
+  const { productType } = req.params;
+  console.log(productType)
 
+  try {
+    const filteredProducts = await productsRepository.getProductsDataByType(productType);
+    res.status(200).send(filteredProducts.rows);
+  } catch (error) {
+    console.log(error)
+    res.status(500).send(error.message);
+  }
+}
 
 export {
-    // insertProduct,
-    // deleteProduct,
-    // finishPurchase,
-    getFilteredProduct
-
-}
+  // insertProduct,
+  // deleteProduct,
+  // finishPurchase,
+  getFilteredProduct,
+  getAllProducts,
+};
