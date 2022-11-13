@@ -82,15 +82,15 @@ function getAllProducts(req, res) {
 }
 function getFilteredProduct(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var productType, filteredProducts, error_3;
+        var typeName, filteredProducts, error_3;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    productType = req.params;
+                    typeName = req.params.typeName;
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 3, , 4]);
-                    return [4 /*yield*/, productsRepository.getProductsDataByType(productType)];
+                    return [4 /*yield*/, productsRepository.getProductsDataByType({ typeName: typeName })];
                 case 2:
                     filteredProducts = _a.sent();
                     res.status(200).send(filteredProducts.rows);
@@ -110,11 +110,11 @@ function removeProductStock(req, res) {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    name = req.body;
+                    name = req.body.name;
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 3, , 4]);
-                    return [4 /*yield*/, productsRepository.updateStock(name)];
+                    return [4 /*yield*/, productsRepository.updateStock({ name: name })];
                 case 2:
                     _a.sent();
                     res.sendStatus(200);
@@ -134,11 +134,11 @@ function deleteProduct(req, res) {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    name = req.body;
+                    name = req.body.name;
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 3, , 4]);
-                    return [4 /*yield*/, productsRepository.deleteProduct(name)];
+                    return [4 /*yield*/, productsRepository.deleteProduct({ name: name })];
                 case 2:
                     _a.sent();
                     res.sendStatus(200);

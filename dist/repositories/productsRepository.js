@@ -114,23 +114,25 @@ function getProductsData() {
         });
     });
 }
-function getProductsDataByType(productType) {
+function getProductsDataByType(_a) {
+    var typeName = _a.typeName;
     return __awaiter(this, void 0, void 0, function () {
         var productsData;
-        return __generator(this, function (_a) {
+        return __generator(this, function (_b) {
             productsData = "SELECT \n\tproducts.id, \n\tproducts.name,  \n\tproducts.description, \n\tproducttype.name AS type, \n\tbrands.name AS brand,\n\tproducts.stock\n\tFROM products \n\tJOIN producttype ON products.typeid = producttype.id \n\tJOIN brands ON products.brandid = brands.id \n    WHERE producttype.name = $1\n\tGROUP BY products.typeid, products.id, producttype.name, brands.id\n    ";
-            return [2 /*return*/, connection.query(productsData, [productType])];
+            return [2 /*return*/, connection.query(productsData, [typeName])];
         });
     });
 }
-function updateStock(name) {
+function updateStock(_a) {
+    var name = _a.name;
     return __awaiter(this, void 0, void 0, function () {
         var stock, stockUpdated, updateQuery;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
+        return __generator(this, function (_b) {
+            switch (_b.label) {
                 case 0: return [4 /*yield*/, connection.query("SELECT stock FROM products WHERE name = $1", [name])];
                 case 1:
-                    stock = _a.sent();
+                    stock = _b.sent();
                     stockUpdated = Number(stock.rows[0].stock) - 1;
                     updateQuery = "UPDATE products SET stock = $1 WHERE name = $2";
                     return [2 /*return*/, connection.query(updateQuery, [stockUpdated, name])];
@@ -138,10 +140,11 @@ function updateStock(name) {
         });
     });
 }
-function deleteProduct(name) {
+function deleteProduct(_a) {
+    var name = _a.name;
     return __awaiter(this, void 0, void 0, function () {
         var deleteQuery;
-        return __generator(this, function (_a) {
+        return __generator(this, function (_b) {
             deleteQuery = "DELETE FROM products WHERE name = $1";
             return [2 /*return*/, connection.query(deleteQuery, [name])];
         });
