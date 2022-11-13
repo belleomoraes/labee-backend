@@ -20,7 +20,7 @@ async function insertNewProduct(newProduct: Product): Promise<QueryResult<Produc
   );
 
   const insertQuery: string =
-    "INSERT INTO products (name, description, brandId, expirationDate, typeId, stock) VALUES ($1, $2, $3, $4, $5, $6)";
+    "INSERT INTO products (name, description, brandid, expirationdate, typeid, stock) VALUES ($1, $2, $3, $4, $5, $6)";
 
   return connection.query(insertQuery, [
     newProduct.name,
@@ -32,15 +32,16 @@ async function insertNewProduct(newProduct: Product): Promise<QueryResult<Produc
   ]);
 }
 
-async function getProductBrand(brandName: ProductBrandName) {
+async function getProductBrand({ brandName }: ProductBrandName) {
   const brand: QueryResult<ProductBrandName> = await connection.query(
     "SELECT name FROM brands WHERE name = $1",
     [brandName]
   );
+
   return brand.rows;
 }
 
-async function getProductType(typeName: ProductTypeName) {
+async function getProductType({ typeName }: ProductTypeName) {
   const typeProduct: QueryResult<ProductTypeName> = await connection.query(
     "SELECT name FROM producttype WHERE name = $1",
     [typeName]
@@ -48,14 +49,17 @@ async function getProductType(typeName: ProductTypeName) {
   return typeProduct.rows;
 }
 
-async function insertProductBrand(
-  brandName: ProductBrandName
-): Promise<QueryResult<ProductEntity>> {
-  const insertQuery: string = `INSERT INTO producttype (name) VALUES ($1)`;
+async function insertProductBrand({
+  brandName,
+}: ProductBrandName): Promise<QueryResult<ProductEntity>> {
+  const insertQuery: string = `INSERT INTO brands (name) VALUES ($1)`;
   return connection.query(insertQuery, [brandName]);
 }
 
-async function insertProductType(typeName: ProductTypeName): Promise<QueryResult<ProductEntity>> {
+async function insertProductType({
+  typeName,
+}: ProductTypeName): Promise<QueryResult<ProductEntity>> {
+  
   const insertQuery: string = `INSERT INTO producttype (name) VALUES ($1)`;
   return connection.query(insertQuery, [typeName]);
 }
@@ -94,7 +98,7 @@ async function getProductsDataByType({
   return connection.query(productsData, [typeName]);
 }
 
-async function updateStock({name}: ProductName): Promise<QueryResult<ProductEntity>> {
+async function updateStock({ name }: ProductName): Promise<QueryResult<ProductEntity>> {
   const stock: QueryResult<ProductStock> = await connection.query(
     "SELECT stock FROM products WHERE name = $1",
     [name]
@@ -104,7 +108,7 @@ async function updateStock({name}: ProductName): Promise<QueryResult<ProductEnti
   return connection.query(updateQuery, [stockUpdated, name]);
 }
 
-async function deleteProduct({name}: ProductName): Promise<QueryResult<ProductEntity>> {
+async function deleteProduct({ name }: ProductName): Promise<QueryResult<ProductEntity>> {
   const deleteQuery: string = `DELETE FROM products WHERE name = $1`;
   return connection.query(deleteQuery, [name]);
 }

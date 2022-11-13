@@ -7,7 +7,6 @@ async function insertProduct(req: Request, res: Response): Promise<void> {
 
   try {
     await productsRepository.insertNewProduct(newProduct);
-
     res.sendStatus(200);
   } catch (error) {
     res.status(500).send(error.message);

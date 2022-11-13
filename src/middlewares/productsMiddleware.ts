@@ -6,28 +6,38 @@ import { ProductBrandName, ProductTypeName } from "../protocols/Products";
 import Joi from "joi";
 
 async function checkTypeExistance(req: Request, res: Response, next: NextFunction) {
-  const typeName = req.body as ProductTypeName;
+  console.log("entrei");
+  const { typeName } = req.body as ProductTypeName;
 
-  const typeProduct: ProductTypeName[] = await productsRepository.getProductType(typeName);
+  const typeProduct: ProductTypeName[] = await productsRepository.getProductType({ typeName });
 
-  if (typeProduct.length === 0) {
-    await productsRepository.insertProductType(typeName);
-    return;
+  try {
+    if (typeProduct.length === 0) {
+      await productsRepository.insertProductType({ typeName });
+      return;
+    }
+
+    next();
+  } catch (error) {
+    res.status(500).send(error.message);
   }
-
-  next();
 }
 
 async function checkBrandExistance(req: Request, res: Response, next: NextFunction) {
-  const brandName = req.body as ProductBrandName;
-  const brandProduct: ProductBrandName[] = await productsRepository.getProductBrand(brandName);
+  const { brandName } = req.body as ProductBrandName;
 
-  if (brandProduct.length === 0) {
-    await productsRepository.insertProductBrand(brandName);
-    return;
+  const brandProduct: ProductBrandName[] = await productsRepository.getProductBrand({ brandName });
+
+  try {
+    if (brandProduct.length === 0) {
+      await productsRepository.insertProductBrand({ brandName });
+      return;
+    }
+
+    next();
+  } catch (error) {
+    res.status(500).send(error.message);
   }
-
-  next();
 }
 
 function validateProductSchema(req: Request, res: Response, next: NextFunction) {
@@ -35,10 +45,14 @@ function validateProductSchema(req: Request, res: Response, next: NextFunction) 
     abortEarly: false,
   });
 
-  if (validation.error) {
-    return res.status(422).send({ message: validation.error.message });
-  }
+  try {
+    if (validation.error) {
+      return res.status(422).send({ message: validation.error.message });
+    }
 
-  next();
+    next();
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
 }
 export { checkBrandExistance, checkTypeExistance, validateProductSchema };
