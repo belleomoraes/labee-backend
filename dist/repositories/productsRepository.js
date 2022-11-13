@@ -35,16 +35,127 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 import connection from "../database/db.js";
+function insertNewProduct(newProduct) {
+    return __awaiter(this, void 0, void 0, function () {
+        var brandId, typeId, insertQuery;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, connection.query("SELECT id FROM brands WHERE name = $1", [
+                        newProduct.brandName,
+                    ])];
+                case 1:
+                    brandId = _a.sent();
+                    return [4 /*yield*/, connection.query("SELECT id FROM producttype WHERE name = $1", [newProduct.typeName])];
+                case 2:
+                    typeId = _a.sent();
+                    insertQuery = "INSERT INTO products (name, description, brandId, expirationDate, typeId, stock) VALUES ($1, $2, $3, $4, $5, $6)";
+                    return [2 /*return*/, connection.query(insertQuery, [
+                            newProduct.name,
+                            newProduct.description,
+                            brandId.rows[0].id,
+                            newProduct.expirationDate,
+                            typeId.rows[0].id,
+                            newProduct.stock,
+                        ])];
+            }
+        });
+    });
+}
+function getProductBrand(brandName) {
+    return __awaiter(this, void 0, void 0, function () {
+        var brand;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, connection.query("SELECT name FROM brands WHERE name = $1", [brandName])];
+                case 1:
+                    brand = _a.sent();
+                    return [2 /*return*/, brand.rows];
+            }
+        });
+    });
+}
+function getProductType(typeName) {
+    return __awaiter(this, void 0, void 0, function () {
+        var typeProduct;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, connection.query("SELECT name FROM producttype WHERE name = $1", [typeName])];
+                case 1:
+                    typeProduct = _a.sent();
+                    return [2 /*return*/, typeProduct.rows];
+            }
+        });
+    });
+}
+function insertProductBrand(brandName) {
+    return __awaiter(this, void 0, void 0, function () {
+        var insertQuery;
+        return __generator(this, function (_a) {
+            insertQuery = "INSERT INTO producttype (name) VALUES ($1)";
+            return [2 /*return*/, connection.query(insertQuery, [brandName])];
+        });
+    });
+}
+function insertProductType(typeName) {
+    return __awaiter(this, void 0, void 0, function () {
+        var insertQuery;
+        return __generator(this, function (_a) {
+            insertQuery = "INSERT INTO producttype (name) VALUES ($1)";
+            return [2 /*return*/, connection.query(insertQuery, [typeName])];
+        });
+    });
+}
 function getProductsData() {
     return __awaiter(this, void 0, void 0, function () {
         var productsData;
         return __generator(this, function (_a) {
-            productsData = "SELECT * FROM products";
+            productsData = "SELECT \n\tproducts.id, \n\tproducts.name,  \n    products.description,\n\tproducttype.name AS type, \n\tbrands.name AS brand,\n\tproducts.stock\n\tFROM products \n\tJOIN producttype ON products.typeid = producttype.id \n\tJOIN brands ON products.brandid = brands.id \n\tGROUP BY products.typeid, products.id, producttype.name, brands.id";
             return [2 /*return*/, connection.query(productsData)];
         });
     });
 }
+function getProductsDataByType(productType) {
+    return __awaiter(this, void 0, void 0, function () {
+        var productsData;
+        return __generator(this, function (_a) {
+            productsData = "SELECT \n\tproducts.id, \n\tproducts.name,  \n\tproducts.description, \n\tproducttype.name AS type, \n\tbrands.name AS brand,\n\tproducts.stock\n\tFROM products \n\tJOIN producttype ON products.typeid = producttype.id \n\tJOIN brands ON products.brandid = brands.id \n    WHERE producttype.name = $1\n\tGROUP BY products.typeid, products.id, producttype.name, brands.id\n    ";
+            return [2 /*return*/, connection.query(productsData, [productType])];
+        });
+    });
+}
+function updateStock(name) {
+    return __awaiter(this, void 0, void 0, function () {
+        var stock, stockUpdated, updateQuery;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, connection.query("SELECT stock FROM products WHERE name = $1", [name])];
+                case 1:
+                    stock = _a.sent();
+                    stockUpdated = Number(stock.rows[0].stock) - 1;
+                    updateQuery = "UPDATE products SET stock = $1 WHERE name = $2";
+                    return [2 /*return*/, connection.query(updateQuery, [stockUpdated, name])];
+            }
+        });
+    });
+}
+function deleteProduct(name) {
+    return __awaiter(this, void 0, void 0, function () {
+        var deleteQuery;
+        return __generator(this, function (_a) {
+            deleteQuery = "DELETE FROM products WHERE name = $1";
+            return [2 /*return*/, connection.query(deleteQuery, [name])];
+        });
+    });
+}
 var productsRepository = {
-    getProductsData: getProductsData
+    insertNewProduct: insertNewProduct,
+    getProductsData: getProductsData,
+    getProductsDataByType: getProductsDataByType,
+    updateStock: updateStock,
+    deleteProduct: deleteProduct,
+    getProductBrand: getProductBrand,
+    getProductType: getProductType,
+    insertProductBrand: insertProductBrand,
+    insertProductType: insertProductType
 };
 export { productsRepository };

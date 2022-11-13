@@ -75,9 +75,9 @@ async function getProductsData(): Promise<QueryResult<ProductEntity>> {
   return connection.query(productsData);
 }
 
-async function getProductsDataByType(
-  productType: ProductTypeName
-): Promise<QueryResult<ProductEntity>> {
+async function getProductsDataByType({
+  typeName,
+}: ProductTypeName): Promise<QueryResult<ProductEntity>> {
   const productsData: string = `SELECT 
 	products.id, 
 	products.name,  
@@ -91,7 +91,7 @@ async function getProductsDataByType(
     WHERE producttype.name = $1
 	GROUP BY products.typeid, products.id, producttype.name, brands.id
     `;
-  return connection.query(productsData, [productType]);
+  return connection.query(productsData, [typeName]);
 }
 
 async function updateStock(name: ProductName): Promise<QueryResult<ProductEntity>> {

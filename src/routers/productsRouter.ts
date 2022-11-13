@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get('/', getAllProducts)
 router.post('/', validateProductSchema, checkBrandExistance, checkTypeExistance, insertProduct)
-router.get('/products/:productType', getFilteredProduct)
+router.get('/products/:typeName', getFilteredProduct)
 router.post('/products', removeProductStock)
 router.delete('/products', deleteProduct)
 
